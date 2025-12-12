@@ -1,4 +1,4 @@
-from preprocess import preprocess_data
+from .automate_muhammadrizqiabdilah import preprocess_data
 import pandas as pd
 
 
