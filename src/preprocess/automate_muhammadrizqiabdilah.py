@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
 def preprocess_data(df):
     num_cols = ['Quantity', 'Price Per Unit', 'Total Spent']
@@ -44,5 +44,15 @@ def preprocess_data(df):
         q=3, labels=["Low", "Medium", "High"]
     )
 
-    return df_clean
+    encoder = OneHotEncoder(sparse_output=False)
+    one_hot_encoded = encoder.fit_transform(df_clean[['Item']])
 
+    one_hot_df = pd.DataFrame(
+        one_hot_encoded, 
+        columns=encoder.get_feature_names_out(['Item']),
+        index=df_clean.index
+    )
+
+    df_encoded = pd.concat([df_clean, one_hot_df], axis=1)
+    df_encoded = df_encoded.drop('Item', axis=1)
+    return df_encoded
